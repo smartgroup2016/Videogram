@@ -1,0 +1,107 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile files('libs/quickblox-android-sdk-core-2.3.3.jar')
+    compile files('libs/quickblox-android-sdk-chat-2.3.3.jar')
+    compile files('libs/quickblox-android-sdk-videochat-webrtc-2.3.3.jar')
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
+    compile 'net.hockeyapp.android:HockeySDK:4.0.1'
+    compile 'com.googlecode.mp4parser:isoparser:1.0.6'
+}
+
+android {
+    signingConfigs {
+        config {
+        }
+    }
+    compileSdkVersion 23
+    buildToolsVersion '23.0.3'
+    useLibrary 'org.apache.http.legacy'
+    defaultConfig.applicationId = "ir.smartgroup.videogram"
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+    allprojects {
+        tasks.withType(JavaCompile) {
+            sourceCompatibility = "1.7"
+            targetCompatibility = "1.7"
+        }
+    }
+    dexOptions {
+        jumboMode = true
+    }
+    /*signingConfigs {
+        debug {
+            storeFile file("config/release.keystore")
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+
+        release {
+            storeFile file("config/release.keystore")
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+    }*/
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+            jniDebuggable false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            jniDebuggable false
+          //  signingConfig signingConfigs.release
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        foss {
+            debuggable false
+            jniDebuggable false
+//            signingConfig signingConfigs.release
+        }
+    }
+    defaultConfig.versionCode = 821
+    sourceSets.main {
+        jniLibs.srcDir 'libs'
+        jni.srcDirs = [] //disable automatic ndk-build call
+    }
+    sourceSets.debug {
+        manifest.srcFile 'config/debug/AndroidManifest.xml'
+    }
+    sourceSets.release {
+        manifest.srcFile 'config/release/AndroidManifest.xml'
+    }
+    sourceSets.foss {
+        manifest.srcFile 'config/foss/AndroidManifest.xml'
+    }
+    productFlavors {
+    }
+    //applicationVariants.all { variant ->
+//        def abiVersion = variant.productFlavors.get(0).versionCode
+    //   variant.mergedFlavor.versionCode = defaultConfig.versionCode * 10 + abiVersion;
+    // }
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionName '3.10'
+        applicationId 'ir.smartgroup.videogram'
+        versionCode 822
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'
