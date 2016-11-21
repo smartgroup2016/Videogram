@@ -20,7 +20,7 @@ import org.telegram.messenger.exoplayer.text.Cue;
 /**
  * Represents a TTML Region.
  */
-/* package */public final class TtmlRegion {
+/* package */ final class TtmlRegion {
 
   public final float position;
   public final float line;

@@ -294,7 +294,7 @@ public class ManageSpaceActivity extends Activity implements ActionBarLayout.Act
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(android.content.res.Configuration newConfig) {
         AndroidUtilities.checkDisplaySize();
         super.onConfigurationChanged(newConfig);
         fixLayout();

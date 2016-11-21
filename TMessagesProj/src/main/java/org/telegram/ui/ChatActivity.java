@@ -24,16 +24,12 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.Spannable;
@@ -61,77 +57,76 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.ApplicationLoader;
+import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.ChatObject;
-import org.telegram.messenger.ContactsController;
 import org.telegram.messenger.Emoji;
-import org.telegram.messenger.FileLoader;
-import org.telegram.messenger.FileLog;
-import org.telegram.messenger.ImageReceiver;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MediaController;
-import org.telegram.messenger.MessageObject;
-import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.MessagesStorage;
-import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.NotificationsController;
-import org.telegram.messenger.R;
 import org.telegram.messenger.SecretChatHelper;
 import org.telegram.messenger.SendMessagesHelper;
-import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.UserObject;
 import org.telegram.messenger.Utilities;
 import org.telegram.messenger.VideoEditedInfo;
 import org.telegram.messenger.browser.Browser;
-import org.telegram.messenger.exoplayer.text.ttml.TtmlNode;
 import org.telegram.messenger.query.BotQuery;
 import org.telegram.messenger.query.DraftQuery;
-import org.telegram.messenger.query.MessagesQuery;
 import org.telegram.messenger.query.MessagesSearchQuery;
+import org.telegram.messenger.query.MessagesQuery;
 import org.telegram.messenger.query.SearchQuery;
 import org.telegram.messenger.query.StickersQuery;
 import org.telegram.messenger.support.widget.GridLayoutManager;
 import org.telegram.messenger.support.widget.LinearLayoutManager;
 import org.telegram.messenger.support.widget.RecyclerView;
+import org.telegram.messenger.ApplicationLoader;
+import org.telegram.messenger.FileLoader;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.RequestDelegate;
 import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
-import org.telegram.ui.ActionBar.ActionBar;
+import org.telegram.messenger.ContactsController;
+import org.telegram.messenger.FileLog;
+import org.telegram.messenger.MessageObject;
+import org.telegram.messenger.MessagesController;
+import org.telegram.messenger.NotificationCenter;
+import org.telegram.messenger.R;
+import org.telegram.messenger.UserConfig;
 import org.telegram.ui.ActionBar.ActionBarLayout;
-import org.telegram.ui.ActionBar.ActionBarMenu;
-import org.telegram.ui.ActionBar.ActionBarMenuItem;
 import org.telegram.ui.ActionBar.BackDrawable;
-import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.BottomSheet;
 import org.telegram.ui.ActionBar.SimpleTextView;
-import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Adapters.MentionsAdapter;
 import org.telegram.ui.Adapters.StickersAdapter;
-import org.telegram.ui.Cells.BotHelpCell;
+import org.telegram.messenger.AnimatorListenerAdapterProxy;
 import org.telegram.ui.Cells.ChatActionCell;
 import org.telegram.ui.Cells.ChatLoadingCell;
+import org.telegram.ui.ActionBar.ActionBar;
+import org.telegram.ui.ActionBar.ActionBarMenu;
+import org.telegram.ui.ActionBar.ActionBarMenuItem;
 import org.telegram.ui.Cells.ChatMessageCell;
 import org.telegram.ui.Cells.ChatUnreadCell;
 import org.telegram.ui.Cells.CheckBoxCell;
 import org.telegram.ui.Components.AlertsCreator;
 import org.telegram.ui.Components.BackupImageView;
+import org.telegram.ui.ActionBar.BaseFragment;
+import org.telegram.ui.Cells.BotHelpCell;
 import org.telegram.ui.Components.ChatActivityEnterView;
+import org.telegram.messenger.ImageReceiver;
 import org.telegram.ui.Components.ChatAttachAlert;
 import org.telegram.ui.Components.ChatAvatarContainer;
 import org.telegram.ui.Components.ContextProgressView;
 import org.telegram.ui.Components.ExtendedGridLayoutManager;
+import org.telegram.ui.Components.PlayerView;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.NumberTextView;
-import org.telegram.ui.Components.PlayerView;
 import org.telegram.ui.Components.RecyclerListView;
 import org.telegram.ui.Components.ShareAlert;
 import org.telegram.ui.Components.Size;
 import org.telegram.ui.Components.SizeNotifierFrameLayout;
 import org.telegram.ui.Components.StickersAlert;
+import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Components.URLSpanBotCommand;
 import org.telegram.ui.Components.URLSpanNoUnderline;
 import org.telegram.ui.Components.URLSpanReplacement;
@@ -270,7 +265,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private boolean scrollToTopOnResume;
     private boolean forceScrollToTop;
     private boolean scrollToTopUnReadOnResume;
-    public static long dialog_id;
+    private long dialog_id;
     private int lastLoadIndex;
     private boolean isBroadcast;
     private HashMap<Integer, MessageObject>[] selectedMessagesIds = new HashMap[]{new HashMap<>(), new HashMap<>()};
@@ -329,11 +324,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private Runnable openSecretPhotoRunnable = null;
     private float startX = 0;
     private float startY = 0;
-    private static boolean noFrom_forward = false;
+
     private final static int copy = 10;
     private final static int forward = 11;
-    private static final int forward_without_qoute = 92;
-    private static final int no_from_forward = 90;
     private final static int delete = 12;
     private final static int chat_enc_timer = 13;
     private final static int chat_menu_attach = 14;
@@ -360,8 +353,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
     private final static int id_chat_compose_panel = 1000;
 
-    private TextView dateTv;
-    private boolean showDateTv;
     RecyclerListView.OnItemLongClickListener onItemLongClickListener = new RecyclerListView.OnItemLongClickListener() {
         @Override
         public boolean onItemClick(View view, int position) {
@@ -778,13 +769,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         return;
                     }
                     createDeleteMessagesAlert(null);
-                } else if (id == ChatActivity.forward || id == ChatActivity.no_from_forward) {
-                    if (id == ChatActivity.no_from_forward) {
-                        ChatActivity.noFrom_forward = true;
-                    } else {
-                        ChatActivity.noFrom_forward = false;
-                    }
-
+                } else if (id == forward) {
                     Bundle args = new Bundle();
                     args.putBoolean("onlySelect", true);
                     args.putInt("dialogsType", 1);
@@ -1073,7 +1058,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 actionModeViews.add(actionMode.addItem(reply, R.drawable.ic_ab_reply, Theme.ACTION_BAR_MODE_SELECTOR_COLOR, null, AndroidUtilities.dp(54)));
             }
             actionModeViews.add(actionMode.addItem(copy, R.drawable.ic_ab_fwd_copy, Theme.ACTION_BAR_MODE_SELECTOR_COLOR, null, AndroidUtilities.dp(54)));
-            actionModeViews.add(actionMode.addItem(no_from_forward, R.drawable.ic_ab_fwd_quoteforward, Theme.ACTION_BAR_MODE_SELECTOR_COLOR, null, AndroidUtilities.dp(54)));
             actionModeViews.add(actionMode.addItem(forward, R.drawable.ic_ab_fwd_forward, Theme.ACTION_BAR_MODE_SELECTOR_COLOR, null, AndroidUtilities.dp(54)));
             actionModeViews.add(actionMode.addItem(delete, R.drawable.ic_ab_fwd_delete, Theme.ACTION_BAR_MODE_SELECTOR_COLOR, null, AndroidUtilities.dp(54)));
             actionModeViews.add(editDoneItem = actionMode.addItem(edit_done, R.drawable.check_blue, Theme.ACTION_BAR_MODE_SELECTOR_COLOR, null, AndroidUtilities.dp(54)));
@@ -1129,7 +1113,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     } else if (chatActivityEnterView.isPopupView(child)) {
                         child.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(child.getLayoutParams().height, MeasureSpec.EXACTLY));
                     } else if (child == mentionContainer) {
-                        LayoutParams layoutParams = (LayoutParams) mentionContainer.getLayoutParams();
+                        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mentionContainer.getLayoutParams();
                         int height;
                         mentionListViewIgnoreLayout = true;
 
@@ -1402,9 +1386,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     highlightMessageId = Integer.MAX_VALUE;
                     updateVisibleRows();
                 }
-                if (newState == 0) {
-                    ChatActivity.this.hideDateTv();
-                }
             }
 
             @Override
@@ -1438,9 +1419,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     }
                 }
                 updateMessagesVisisblePart();
-                if (dy != 0) {
-                    ChatActivity.this.updateDateToast();
-                }
             }
         });
         chatListView.setOnTouchListener(new View.OnTouchListener() {
@@ -2619,17 +2597,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         updateSecretStatus();
         updateSpamView();
         updatePinnedMessageView(true);
-        this.showDateTv = ApplicationLoader.applicationContext.getSharedPreferences("plusconfig", attach_photo).getBoolean("showDateToast", true);
-        this.dateTv = new TextView(context);
-        this.dateTv.setVisibility(View.INVISIBLE);
-        this.dateTv.setPadding(AndroidUtilities.dp(5.0f), 0, AndroidUtilities.dp(5.0f), 0);
-        this.dateTv.setTextSize(17.0f);
-        GradientDrawable shape = new GradientDrawable();
-        shape.setCornerRadius((float) AndroidUtilities.dp(4.0f));
-        shape.setColor(Color.GRAY);
-        this.dateTv.setBackgroundDrawable(shape);
-        this.dateTv.setTextColor(Color.WHITE);
-        contentView.addView(this.dateTv, LayoutHelper.createFrame(-2, -2.0f, 49, 0.0f, 2.0f, 0.0f, 0.0f));
 
         try {
             if (currentEncryptedChat != null && Build.VERSION.SDK_INT >= 23) {
@@ -3668,7 +3635,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 }
             }
             if (forwardingMessages != null) {
-                forwardMessages(forwardingMessages, !noFrom_forward);
+                forwardMessages(forwardingMessages, false);
             }
             chatActivityEnterView.setForceShowSendButton(false, animated);
             chatActivityEnterView.hideTopView(animated);
@@ -6831,7 +6798,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(android.content.res.Configuration newConfig) {
         fixLayout();
     }
 
@@ -7124,8 +7091,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         }
                         items.add(LocaleController.getString("Forward", R.string.Forward));
                         options.add(2);
-                        items.add(LocaleController.getString("ForwardNoQuote", R.string.ForwardNoQuote));
-                        options.add(100);
                         if (allowUnpin) {
                             items.add(LocaleController.getString("UnpinMessage", R.string.UnpinMessage));
                             options.add(14);
@@ -7355,19 +7320,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 break;
             }
             case 2: {
-                ChatActivity.noFrom_forward = true;
-                forwaringMessage = selectedObject;
-                Bundle args = new Bundle();
-                args.putBoolean("onlySelect", true);
-                args.putInt("dialogsType", 1);
-                DialogsActivity fragment = new DialogsActivity(args);
-                fragment.setDelegate(this);
-                presentFragment(fragment);
-                break;
-
-            }
-            case 100: {
-                noFrom_forward = false;
                 forwaringMessage = selectedObject;
                 Bundle args = new Bundle();
                 args.putBoolean("onlySelect", true);
@@ -8540,31 +8492,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 super.notifyItemRangeRemoved(positionStart, itemCount);
             } catch (Exception e) {
                 FileLog.e("tmessages", e);
-            }
-        }
-    }
-    private void hideDateTv() {
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                ChatActivity.this.dateTv.setVisibility(8);
-            }
-        }, 1500);
-    }
-    private void updateDateToast() {
-        if (this.chatListView != null && this.showDateTv) {
-            View view = this.chatListView.getChildAt(0);
-            String d = TtmlNode.ANONYMOUS_REGION_ID;
-            if (view instanceof ChatMessageCell) {
-                d = LocaleController.formatDateChat((long) ((ChatMessageCell) view).getMessageObject().messageOwner.date);
-            } else if (view instanceof ChatActionCell) {
-                ChatActionCell messageCell = (ChatActionCell) view;
-                if (getMessageType(messageCell.getMessageObject()) == -1 && messageCell.getMessageObject().getId() == 0) {
-                    d = messageCell.getMessageObject().messageText.toString();
-                }
-            }
-            if (d.length() > 0) {
-                this.dateTv.setVisibility(View.VISIBLE);
-                this.dateTv.setText(d);
             }
         }
     }

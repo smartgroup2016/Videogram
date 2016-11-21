@@ -15,15 +15,15 @@
  */
 package org.telegram.messenger.exoplayer.text.ttml;
 
+import org.telegram.messenger.exoplayer.util.Assertions;
+
 import android.graphics.Typeface;
 import android.text.Layout;
-
-import org.telegram.messenger.exoplayer.util.Assertions;
 
 /**
  * Style object of a <code>TtmlNode</code>
  */
-/* package */public final class TtmlStyle {
+/* package */ final class TtmlStyle {
 
   public static final int UNSPECIFIED = -1;
 

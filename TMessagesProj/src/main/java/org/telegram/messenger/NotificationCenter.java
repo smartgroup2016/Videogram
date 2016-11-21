@@ -111,9 +111,6 @@ public class NotificationCenter {
     public static final int audioDidStarted = totalEvents++;
     public static final int audioRouteChanged = totalEvents++;
 
-    public static final int spamErrorReceived = totalEvents++;
-    public static final int ThemeUpdated= totalEvents++;
-
     private SparseArray<ArrayList<Object>> observers = new SparseArray<>();
     private SparseArray<ArrayList<Object>> removeAfterBroadcast = new SparseArray<>();
     private SparseArray<ArrayList<Object>> addAfterBroadcast = new SparseArray<>();

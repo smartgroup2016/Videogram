@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Package internal utility class to render styled <code>TtmlNode</code>s.
  */
-/* package */ public final class TtmlRenderUtil {
+/* package */ final class TtmlRenderUtil {
 
   public static TtmlStyle resolveStyle(TtmlStyle style, String[] styleIds,
       Map<String, TtmlStyle> globalStyles) {
@@ -117,7 +117,7 @@ import java.util.Map;
    *
    * @param builder The builder.
    */
-  /* package */public static void endParagraph(SpannableStringBuilder builder) {
+  /* package */ static void endParagraph(SpannableStringBuilder builder) {
     int position = builder.length() - 1;
     while (position >= 0 && builder.charAt(position) == ' ') {
       position--;
@@ -133,7 +133,7 @@ import java.util.Map;
    * @param in The text element to which the policy should be applied.
    * @return The result of applying the policy to the text element.
    */
-  /* package */ public static String applyTextElementSpacePolicy(String in) {
+  /* package */ static String applyTextElementSpacePolicy(String in) {
     // Removes carriage return followed by line feed. See: http://www.w3.org/TR/xml/#sec-line-ends
     String out = in.replaceAll("\r\n", "\n");
     // Apply suppress-at-line-break="auto" and

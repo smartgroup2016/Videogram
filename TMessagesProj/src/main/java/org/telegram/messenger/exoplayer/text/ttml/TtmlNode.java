@@ -31,7 +31,7 @@ import java.util.TreeSet;
 /**
  * A package internal representation of TTML node.
  */
-/* package */ public final class TtmlNode {
+/* package */ final class TtmlNode {
 
   public static final long UNDEFINED_TIME = -1;
   public static final String TAG_TT = "tt";

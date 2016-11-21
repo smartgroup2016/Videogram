@@ -26,15 +26,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import org.telegram.SQLite.DatabaseHandler;
-import org.telegram.SQLite.DatabaseHandler2;
-import org.telegram.quickBlox.definitions.Consts;
-import org.telegram.quickBlox.services.IncomeCallListenerService1;
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.SerializedData;
 import org.telegram.tgnet.TLRPC;
@@ -42,9 +37,9 @@ import org.telegram.ui.Components.ForegroundDetector;
 
 import java.io.File;
 import java.io.RandomAccessFile;
+
 public class ApplicationLoader extends Application {
-    public static DatabaseHandler databaseHandler;
-    public static DatabaseHandler2 databaseHandler2;
+
     private static Drawable cachedWallpaper;
     private static int selectedColor;
     private static boolean isCustomTheme;
@@ -298,8 +293,7 @@ public class ApplicationLoader extends Application {
         new ForegroundDetector(this);
 
         applicationHandler = new Handler(applicationContext.getMainLooper());
-        databaseHandler = new DatabaseHandler(applicationContext);
-        databaseHandler2 = new DatabaseHandler2(applicationContext);
+
         startPushService();
     }
 
@@ -329,31 +323,6 @@ public class ApplicationLoader extends Application {
             applicationContext.startService(new Intent(applicationContext, NotificationsService.class));
         } else {
             stopPushService();
-        }
-        SharedPreferences sPref = ApplicationLoader.applicationContext.getSharedPreferences("LogiId",MODE_PRIVATE);
-        SharedPreferences sPref1 = ApplicationLoader.applicationContext.getSharedPreferences("substribed",MODE_PRIVATE);
-
-        String tmp = sPref.getString("logQB", "");
-        boolean subc;
-        int cont = sPref.getInt("counter", 0);
-        if(cont !=10) {
-            cont = cont + 1;
-            SharedPreferences.Editor ed = sPref.edit();
-            ed.putInt("counter", cont);
-            ed.commit();
-            Log.d("Counter = ", String.valueOf(cont));
-            subc = true;
-            ed = sPref1.edit();
-            ed.putBoolean("subc", subc);
-            ed.commit();
-        } else{
-            subc = sPref1.getBoolean("subc",false);
-        }
-        if(subc) {
-           // AnimCache.getInstance().init(applicationContext);
-            if (!tmp.equals("")) {
-                startIncomeCallListenerService(tmp, tmp, Consts.LOGIN);
-            }
         }
     }
 
@@ -445,16 +414,5 @@ public class ApplicationLoader extends Application {
             return false;
         }
         return true;*/
-    }
-    public static void startIncomeCallListenerService(String login, String password, int startServiceVariant){
-        Intent tempIntent = new Intent(applicationContext, IncomeCallListenerService1.class);
-        PendingIntent pendingIntent = PendingIntent.getService(applicationContext, Consts.LOGIN_TASK_CODE, tempIntent, 0);
-        Intent intent = new Intent(applicationContext, IncomeCallListenerService1.class);
-        intent.putExtra(Consts.USER_LOGIN, login);
-        intent.putExtra(Consts.USER_PASSWORD, password);
-        intent.putExtra(Consts.START_SERVICE_VARIANT, startServiceVariant);
-        intent.putExtra(Consts.PARAM_PINTENT, pendingIntent);
-
-        applicationContext.startService(intent);
     }
 }

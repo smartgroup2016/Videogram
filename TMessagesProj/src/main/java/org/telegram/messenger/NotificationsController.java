@@ -388,8 +388,6 @@ public class NotificationsController {
                 for (int a = 0; a < messageObjects.size(); a++) {
                     MessageObject messageObject = messageObjects.get(a);
                     long mid = messageObject.messageOwner.id;
-
-
                     if (messageObject.messageOwner.to_id.channel_id != 0) {
                         mid |= ((long) messageObject.messageOwner.to_id.channel_id) << 32;
                     }

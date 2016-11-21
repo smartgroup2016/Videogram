@@ -24,30 +24,30 @@ public class TLRPC {
     public static final int USER_FLAG_UNUSED                = 0x00000080;
     public static final int USER_FLAG_UNUSED2               = 0x00000100;
     public static final int USER_FLAG_UNUSED3               = 0x00000200;
-    public static final int USER_FLAG_SELF                  = 0x00000400;
-    public static final int USER_FLAG_CONTACT               = 0x00000800;
-    public static final int USER_FLAG_MUTUAL_CONTACT        = 0x00001000;
-    public static final int USER_FLAG_DELETED               = 0x00002000;
-    public static final int USER_FLAG_BOT                   = 0x00004000;
-    public static final int USER_FLAG_BOT_READING_HISTORY   = 0x00008000;
-    public static final int USER_FLAG_BOT_CANT_JOIN_GROUP   = 0x00010000;
-	public static final int USER_FLAG_VERIFIED   			  = 0x00020000;
+    //public static final int USER_FLAG_SELF                  = 0x00000400;
+    //public static final int USER_FLAG_CONTACT               = 0x00000800;
+    //public static final int USER_FLAG_MUTUAL_CONTACT        = 0x00001000;
+    //public static final int USER_FLAG_DELETED               = 0x00002000;
+    //public static final int USER_FLAG_BOT                   = 0x00004000;
+    //public static final int USER_FLAG_BOT_READING_HISTORY   = 0x00008000;
+    //public static final int USER_FLAG_BOT_CANT_JOIN_GROUP   = 0x00010000;
+	//public static final int USER_FLAG_VERIFIED   			  = 0x00020000;
 
-    public static final int CHAT_FLAG_CREATOR               = 0x00000001;
-    public static final int CHAT_FLAG_USER_KICKED           = 0x00000002;
-    public static final int CHAT_FLAG_USER_LEFT             = 0x00000004;
-    public static final int CHAT_FLAG_USER_IS_EDITOR        = 0x00000008;
-    public static final int CHAT_FLAG_USER_IS_MODERATOR     = 0x00000010;
-    public static final int CHAT_FLAG_IS_BROADCAST          = 0x00000020;
+    //public static final int CHAT_FLAG_CREATOR               = 0x00000001;
+    //public static final int CHAT_FLAG_USER_KICKED           = 0x00000002;
+    //public static final int CHAT_FLAG_USER_LEFT             = 0x00000004;
+    //public static final int CHAT_FLAG_USER_IS_EDITOR        = 0x00000008;
+    //public static final int CHAT_FLAG_USER_IS_MODERATOR     = 0x00000010;
+    //public static final int CHAT_FLAG_IS_BROADCAST          = 0x00000020;
     public static final int CHAT_FLAG_IS_PUBLIC             = 0x00000040;
-    public static final int CHAT_FLAG_IS_VERIFIED           = 0x00000080;
+    //public static final int CHAT_FLAG_IS_VERIFIED           = 0x00000080;
 
-    public static final int MESSAGE_FLAG_UNREAD             = 0x00000001;
-    public static final int MESSAGE_FLAG_OUT                = 0x00000002;
+    //public static final int MESSAGE_FLAG_UNREAD             = 0x00000001;
+    //public static final int MESSAGE_FLAG_OUT                = 0x00000002;
     public static final int MESSAGE_FLAG_FWD                = 0x00000004;
     public static final int MESSAGE_FLAG_REPLY              = 0x00000008;
-    public static final int MESSAGE_FLAG_MENTION            = 0x00000010;
-    public static final int MESSAGE_FLAG_CONTENT_UNREAD     = 0x00000020;
+    //public static final int MESSAGE_FLAG_MENTION            = 0x00000010;
+    //public static final int MESSAGE_FLAG_CONTENT_UNREAD     = 0x00000020;
     public static final int MESSAGE_FLAG_HAS_MARKUP         = 0x00000040;
     public static final int MESSAGE_FLAG_HAS_ENTITIES       = 0x00000080;
     public static final int MESSAGE_FLAG_HAS_FROM_ID        = 0x00000100;
@@ -60,7 +60,6 @@ public class TLRPC {
     public static final int LAYER = 53;
 
 	public static class DraftMessage extends TLObject {
-		public int last_read;
 		public int flags;
 		public boolean no_webpage;
 		public int reply_to_msg_id;

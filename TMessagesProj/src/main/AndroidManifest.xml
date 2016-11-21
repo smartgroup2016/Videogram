@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ir.smartgroup.videogram"
+    package="org.telegram.messenger"
     android:installLocation="auto">
 
     <supports-screens android:anyDensity="true"
@@ -44,16 +44,7 @@
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
     <!--<uses-permission android:name="android.permission.CAMERA" />-->
 
-
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
-
-
-
-
     <application
-        android:label="@string/AppName"
         android:name=".ApplicationLoader"
         android:allowBackup="false"
         android:hardwareAccelerated="@bool/useHardwareAcceleration"
@@ -251,40 +242,6 @@
 
         <meta-data android:name="com.google.android.gms.car.notification.SmallIcon" android:resource="@drawable/ic_player" />
         <meta-data android:name="com.google.android.gms.car.application" android:resource="@xml/automotive_app_desc" />
-
-
-
-        <activity
-            android:name="org.telegram.ui.CallActivity"
-            android:parentActivityName="org.telegram.ui.CallActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="org.telegram.quickBlox.activities.CallActivity1"
-            android:screenOrientation="portrait"
-            android:taskAffinity="com.quickblox.sample.videochatwebrtc"
-             />
-        <activity
-            android:name="org.telegram.quickBlox.activities.OpponentsActivity"
-            android:screenOrientation="portrait"
-            android:taskAffinity="com.quickblox.sample.videochatwebrtc"
-             />
-
-        <activity
-            android:name="org.telegram.quickBlox.activities.CallActivityTablet"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name="org.telegram.quickBlox.activities.CallActivity1Tablet"
-            android:screenOrientation="landscape"
-            android:taskAffinity="com.quickblox.sample.videochatwebrtc"
-             />
-        <activity
-            android:name="org.telegram.quickBlox.activities.OpponentActivityTablet"
-            android:screenOrientation="landscape"
-            android:taskAffinity="com.quickblox.sample.videochatwebrtc"
-             />
-
-        <service android:name="org.telegram.quickBlox.services.IncomeCallListenerService" />
-        <service android:name="org.telegram.quickBlox.services.IncomeCallListenerService1" />
 
     </application>
 
